@@ -1,5 +1,6 @@
 import numpy as np
-from utils import Softmax
+from utils import softmax
+from optimization import optimize
 
 class OrderedNADE(object):
     """
@@ -17,8 +18,8 @@ class OrderedNADE(object):
         self.slow_factor = slow_factor
 
         self.check_init()
-        self.param_inti()
-        self.run(data, Nepochs, learning_rate, momentum)
+        self.param_init()
+        self.run(data, Nepochs, learning_rate, momentum, verbose)
 
     def check_init(self):
         """
@@ -105,7 +106,7 @@ class OrderedNADE(object):
             drho[i] = np.sum(dpsi)
             da[i] = da[i] + dpsi * self.rho[i]
             dW[:, i] = da[i] * data[i]
-            if d == 0:
+            if i == 0:
                 dc = da[i]
         return drho, dW, dc, dba, dVa, dbm, dVm, dbs, dVs
 
