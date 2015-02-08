@@ -62,7 +62,7 @@ class OrderedNADE(object):
             zs = np.dot(self.Vs['sigma'][i].T, h) + self.bs['sigma']
             self.alphas[i] = softmax(za)
             self.mus[i] = zm
-            self.vars[i] = np.exp(zd)
+            self.vars[i] = np.exp(zs)
             nll -= nll_mog(data[i], self.alphas[i], self.mus[i],
                            self.sigmas[i])
             if i > 0:
