@@ -1,5 +1,3 @@
-import cPickle
-import multiprocessing
 import numpy as np
 
 class Optimize(object):
