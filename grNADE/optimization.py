@@ -36,7 +36,7 @@ class Optimize(object):
             self.momentum = momentum
             self.velocities = {}
             for i, param in enumerate(model.optimize_params):
-                self.velocities[i] = np.zeros(len(param))
+                self.velocities[i] = np.zeros_like(param)
 
         self.check_init(Nbatch, Nthreads, drop_learning_rate)
         self.optimize(Nbatch, Nepochs, Neval, check_epoch, verbose)
@@ -53,27 +53,19 @@ class Optimize(object):
         """
         Standard SGD update.
         """
-        updates = self.gradients_update(batch)
-        for param in self.model.optimize_params:
-            param -= updates
+        gradients = self.model.eval_grads(batch)
+        for i, param in enumerate(self.model.optimize_params):
+            param -= gradients[i] * self.learning_rate
 
     def SGD_with_momentum_update(self, batch):
         """
         SGD with momentum.
         """
-        grad_updates = self.gradients_update(batch)
+        gradients = self.model.eval_grads(batch)
         for i, param in enumerate(self.model.optimize_params):
             self.velocities[i] *= self.momentum
-            self.velocities[i] -= grad_updates
+            self.velocities[i] -= gradients[i] * self.learning_rate
             param += self.velocities[i]
-
-    def gradients_update(self, batch):
-        """
-        Calculate the gradient part of updates.
-        """
-        updates = self.learning_rate * self.model.eval_grads(batch)
-        updates = updates.mean(axis=0)
-        return updates
 
     def optimize(self, Nbatch, Nepochs, Neval, check_epoch, verbose):
         """
