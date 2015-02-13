@@ -49,30 +49,6 @@ def simple_ordered_NADE():
     ll_gmm = gmm.score(X)
     print 'GMM neg log like:', -1 * np.sum(ll_gmm)
 
-    assert 0, 'Need to sort this out when fresh.'
-    # this is stupid but I am tired
-    N = 200
-    x = np.linspace(X[:, 0].min(), X[:, 0].max(), N)
-    y = np.linspace(X[:, 1].min(), X[:, 1].max(), N)
-    grid = np.zeros((N ** 2, 2))
-    for i in range(N):
-        for j in range(N):
-            grid[i * 200 + j] = np.array([x[i], y[i]])
-
-    ll_nade_grid = -1 * model.nll(grid).reshape(N, N)
-    ll_gmm_grid = gmm.score(grid).reshape(N, N)
-
-    f = pl.figure(figsize=(10, 5))
-    pl.subplot(121)
-    i = pl.imshow(ll_gmm_grid, origin='lower', interpolation='nearest')
-    i.set_cmap('Greys')
-    pl.colorbar()
-    pl.subplot(122)
-    i = pl.imshow(ll_nade_grid, origin='lower', interpolation='nearest')
-    i.set_cmap('Greys')
-    pl.colorbar()
-    f.savefig('../plots/simple_nade_test.png')
-
 def SGD_MOG_1D():
     """
     Test for SGD in 1D MOG case.
